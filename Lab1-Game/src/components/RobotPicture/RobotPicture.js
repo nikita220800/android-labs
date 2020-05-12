@@ -14,7 +14,7 @@ export const RobotPicture = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 120,
+    height: 100,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
