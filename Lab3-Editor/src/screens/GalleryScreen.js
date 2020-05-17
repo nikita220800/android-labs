@@ -19,9 +19,7 @@ const Item = ({ photo, onSelect, selected }) => {
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        setTimeout(() => {
-          setSmallPict(null);
-        }, 200);
+        setSmallPict(null);
       };
     }, [])
   );
@@ -85,11 +83,9 @@ export const GalleryScreen = ({ navigation }) => {
     React.useCallback(() => {
       loadPhotos();
       return () => {
-        setTimeout(() => {
-          setPhotos(null);
-          setPhotosAreReady(false);
-          setSelected({ id: null });
-        }, 200);
+        setPhotosAreReady(false);
+        setPhotos(null);
+        setSelected({ id: null });
       };
     }, [])
   );
