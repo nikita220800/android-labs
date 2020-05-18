@@ -11,7 +11,7 @@ function randomInteger(min, max) {
 }
 
 export const Game = ({ navigation }) => {
-  const winCount = 100;
+  const winCount = 50;
   const [statusText, setStatusText] = useState("Ваш черёд бросать кубики");
   const [winner, setWinner] = useState(null);
   const [disabledBtn, setDisabledBtn] = useState(false);
@@ -35,17 +35,6 @@ export const Game = ({ navigation }) => {
       };
     }, [])
   );
-
-  useEffect(() => {
-    if (botPoints >= winCount || playerPoints >= winCount) {
-      setDisabledBtn(true);
-      setTimeout(() => {
-        navigation.navigate("Result", {
-          winner: botPoints >= winCount ? "bot" : "player",
-        });
-      }, 1500);
-    }
-  }, [botPoints, playerPoints]);
 
   useEffect(() => {
     if (botIsPlaying) playBot();
@@ -74,38 +63,53 @@ export const Game = ({ navigation }) => {
     }, 1800);
   };
 
-  const playBot = () => {
-    if (botPoints < winCount && playerPoints < winCount) {
+  const playBot = (prevPoints = null) => {
+    setTimeout(() => {
+      setStatusText("Бот бросает кубики...");
+      setIsLoading(true);
       setTimeout(() => {
-        setStatusText("Бот бросает кубики...");
-        setIsLoading(true);
-        setTimeout(() => {
-          let a = randomInteger(1, 6);
-          let b = randomInteger(1, 6);
-          setCubeDots([a, b]);
-          setIsLoading(false);
-          setBotPoints((prev) => prev + a + b);
-          setStatusText(
-            "+ " +
-              (a + b) +
-              (a + b < 5 ? " очка" : " очков") +
-              " Боту! " +
-              (a === b && winner === null
-                ? "\nВыпал дубль, Бот бросает ещё!"
-                : "")
-          );
-          if (a !== b) {
-            if (botPoints < winCount && playerPoints < winCount) {
-              setTimeout(() => {
-                setDisabledBtn(false);
-                setStatusText("Ваш черёд бросать кубики");
-              }, 1200);
-            }
-            setBotIsPlaying(false);
-          } else playBot();
-        }, 1500);
-      }, 1800);
-    }
+        let a = randomInteger(1, 6);
+        let b = randomInteger(1, 6);
+        let botNewPoints =
+          (prevPoints === null ? botPoints : prevPoints) + a + b;
+        setCubeDots([a, b]);
+        setIsLoading(false);
+        setBotPoints((prev) => prev + a + b);
+        setStatusText(
+          "+ " +
+            (a + b) +
+            (a + b < 5 ? " очка" : " очков") +
+            " Боту! " +
+            (a === b && winner === null
+              ? "\nВыпал дубль, Бот бросает ещё!"
+              : "")
+        );
+        if (a !== b) {
+          if (botNewPoints < winCount && playerPoints < winCount) {
+            setTimeout(() => {
+              setDisabledBtn(false);
+              setStatusText("Ваш черёд бросать кубики");
+            }, 1200);
+          } else {
+            console.log(botNewPoints + " " + playerPoints);
+            setDisabledBtn(true);
+            setTimeout(() => {
+              navigation.navigate("Result", {
+                winner:
+                  botNewPoints === playerPoints
+                    ? "both"
+                    : botNewPoints > playerPoints
+                    ? "bot"
+                    : "player",
+              });
+            }, 1200);
+          }
+          setBotIsPlaying(false);
+        } else {
+          playBot(botNewPoints);
+        }
+      }, 1500);
+    }, 1800);
   };
 
   return (

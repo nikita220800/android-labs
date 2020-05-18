@@ -9,7 +9,9 @@ export const Result = ({ route, navigation }) => {
     <>
       <View style={styles.container}>
         <Text style={styles.header}>
-          {route.params.winner === "player"
+          {route.params.winner === "both"
+            ? "Ничья! Бывает и такое!"
+            : route.params.winner === "player"
             ? "Вы победили!"
             : "Бот победил! Вам повезёт в другой раз!"}
         </Text>
