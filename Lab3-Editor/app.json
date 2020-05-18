@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Lab3-PhotoEditor",
-    "slug": "Lab3-PhotoEditor",
+    "name": "Easy Photo Editor",
+    "slug": "EasyPhotoEditor",
     "sdkVersion": "37.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",

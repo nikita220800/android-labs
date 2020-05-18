@@ -129,7 +129,11 @@ export const CameraScreen = ({ navigation }) => {
           <Picture imgUrl={TakePhotoPict} style={styles.image} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("GalleryScreen");
+          }}
+        >
           <Picture imgUrl={GalleryPict} style={styles.imageSmall} />
         </TouchableOpacity>
       </View>

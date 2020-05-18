@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -16,9 +16,12 @@ import {
 const Item = ({ photo, onSelect, selected }) => {
   const [smallPict, setSmallPict] = useState(null);
 
+  const mountedRef = useRef(true);
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
+        mountedRef.current = false;
         setSmallPict(null);
       };
     }, [])
@@ -26,12 +29,15 @@ const Item = ({ photo, onSelect, selected }) => {
 
   useEffect(() => {
     (async () => {
-      const manipResult = await ImageManipulator.manipulateAsync(
-        photo.uri,
-        [{ resize: { width: 150 } }],
-        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-      );
-      setSmallPict(manipResult);
+      try {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          photo.uri,
+          [{ resize: { width: 150 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        if (!mountedRef.current) return null;
+        setSmallPict(manipResult);
+      } catch (e) {}
     })();
   }, []);
   return (

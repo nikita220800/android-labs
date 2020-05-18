@@ -1,6 +1,5 @@
 import React from "react";
 import "react-native-gesture-handler";
-import * as FileSystem from "expo-file-system";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { CameraScreen } from "./src/screens/CameraScreen";
@@ -18,7 +17,11 @@ export default function App() {
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
         <Stack.Navigator headerMode="none" initialRouteName="OpenScreen">
-          <Stack.Screen name="OpenScreen" component={OpenScreen} />
+          <Stack.Screen
+            name="OpenScreen"
+            component={OpenScreen}
+            initialParams={{ photo_saved: false }}
+          />
           <Stack.Screen name="CameraScreen" component={CameraScreen} />
           <Stack.Screen name="GalleryScreen" component={GalleryScreen} />
           <Stack.Screen name="CheckPhotoScreen" component={CheckPhotoScreen} />
